@@ -89,10 +89,10 @@
 </div>
 <div class="modal-body">
 <div class="form-group">
-<input class="form-control " type="text" placeholder="Title" value="{edit_title}">
+<input class="form-control " type="text" placeholder="Title" value="{edit_title}" name="edit_title" ref="edit_title">
 </div>
 <div class="form-group">
-<textarea rows="2" class="form-control" placeholder="Content">{edit_content}</textarea>
+<textarea rows="2" class="form-control" placeholder="Content" name="edit_content" ref="edit_content">{edit_content}</textarea>
 </div>
 </div>
 <div class="modal-footer ">
@@ -130,12 +130,12 @@ runMe(2,0);
 
 //tombol NEW
 add_deh(){
-var title= self.refs.new_title.value;
-var content= self.refs.new_content.value;
-if(title=='' || content==''){
+var title= self.refs.new_title;
+var content= self.refs.new_content;
+if(title.value=='' || content.value==''){
 alert('No empty data!');
 }else{
-var dataNya = {'title':title,'content':content};
+var dataNya = {'title':title.value,'content':content.value};
 // console.log(JSON.stringify(dataNya));
 $.ajax({
 url: "https://rest-api.r10.co/articles",
@@ -146,11 +146,14 @@ data: JSON.stringify(dataNya),
 success: function(respond) {
 runMe(2,0);
 $('#new').modal('hide');
+title.value='';
+content.value='';
 },
 error: function(){
 runMe(2,0);
 $('#new').modal('hide');
-
+title.value='';
+content.value='';
 }
 
 });
@@ -196,7 +199,13 @@ $('#edit').modal('show');
 
 //tombol update-------------------------------------------
 $('#update-data').click(function(){
-var dataNya = {'title':self.edit_title,'content':self.edit_content};
+  var title= self.refs.edit_title;
+  var content= self.refs.edit_content;
+  if(title.value=='' || content.value==''){
+  alert('No empty data!');
+  }else{
+
+var dataNya = {'title':title.value,'content':content.value};
 // console.log(JSON.stringify(dataNya));
 $.ajax({
 url: "https://rest-api.r10.co/articles/"+self.id_data,
@@ -213,6 +222,7 @@ runMe(2,0);
 $('#edit').modal('hide');
 }
 });
+}
 });
 //tombol delete---------------------------------------------
 $('.delete-btn').click(function(){
