@@ -29,31 +29,31 @@
 
 </div>
 <div class="row">
-  <div class="col-xs-6">
-    <small>Showing {limit} from total {total} data</small>
-  </div>
-  <div class="col-xs-6">
-    <nav aria-label="Page navigation">
-    <ul class="pagination pull-right">
-    <li class="disabled">
-    <a href="#" aria-label="Previous">
-    <span aria-hidden="true">&laquo;</span>
-    </a>
-    </li>
-    <li class="active"><a href="#">1</a></li>
-    <li><a href="#">2</a></li>
-    <li><a href="#">3</a></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
-    <li>
-    <a href="#" aria-label="Next">
-    <span aria-hidden="true">&raquo;</span>
-    </a>
-    </li>
-    </ul>
-    </nav>
+<div class="col-xs-6">
+<small>Showing {limit} from total {total} data</small>
+</div>
+<div class="col-xs-6">
+<nav aria-label="Page navigation">
+<ul class="pagination pull-right">
+<li class="disabled">
+<a href="#" aria-label="Previous">
+<span aria-hidden="true">&laquo;</span>
+</a>
+</li>
+<li class="active"><a href="#">1</a></li>
+<li><a href="#">2</a></li>
+<li><a href="#">3</a></li>
+<li><a href="#">4</a></li>
+<li><a href="#">5</a></li>
+<li>
+<a href="#" aria-label="Next">
+<span aria-hidden="true">&raquo;</span>
+</a>
+</li>
+</ul>
+</nav>
 
-  </div>
+</div>
 </div>
 
 <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
@@ -130,25 +130,31 @@ runMe(2,0);
 
 //tombol NEW
 add_deh(){
-  var title= self.refs.new_title.value;
-  var content= self.refs.new_content.value;
-  var dataNya = {'title':title,'content':content};
-  console.log(JSON.stringify(dataNya));
-  $.ajax({
-  url: "https://rest-api.r10.co/articles",
-  type: "POST",
-  dataType: "application/json",
-  contentType: 'application/json; charset=utf-8',
-  data: JSON.stringify(dataNya),
-  success: function(respond) {
-  console.log(respond.status);
+var title= self.refs.new_title.value;
+var content= self.refs.new_content.value;
+if(title=='' || content==''){
+alert('No empty data!');
+}else{
+var dataNya = {'title':title,'content':content};
+// console.log(JSON.stringify(dataNya));
+$.ajax({
+url: "https://rest-api.r10.co/articles",
+type: "POST",
+dataType: "application/json",
+contentType: 'application/json; charset=utf-8',
+data: JSON.stringify(dataNya),
+success: function(respond) {
+runMe(2,0);
+$('#new').modal('hide');
 },
-error : function(jqXHR, textStatus, errorThrown) {
-  console.log(jqXHR.responseText);
+error: function(){
+runMe(2,0);
+$('#new').modal('hide');
 
 }
-  });
-}
+
+});
+}}
 //------------------------------
 
 function runMe(limit,offset){
@@ -191,15 +197,20 @@ $('#edit').modal('show');
 //tombol update-------------------------------------------
 $('#update-data').click(function(){
 var dataNya = {'title':self.edit_title,'content':self.edit_content};
-console.log(JSON.stringify(dataNya));
+// console.log(JSON.stringify(dataNya));
 $.ajax({
 url: "https://rest-api.r10.co/articles/"+self.id_data,
 type: "PUT",
-dataType: "json",
+dataType: "application/json",
+contentType: 'application/json; charset=utf-8',
 data: JSON.stringify(dataNya),
-// data: dataNya,
-success: function() {
-location.reload();
+success: function(respond) {
+runMe(2,0);
+$('#edit').modal('hide');
+},
+error: function() {
+runMe(2,0);
+$('#edit').modal('hide');
 }
 });
 });
@@ -215,12 +226,8 @@ $.ajax({
 url: "https://rest-api.r10.co/articles/"+self.id_data,
 type: "DELETE",
 success: function(respond) {
-if(respond.status==true){
-runMe();
+runMe(2,0);
 $('#delete').modal('hide');
-}else{
-alert('Failed');
-}
 // console.log(respond.status)
 
 }
