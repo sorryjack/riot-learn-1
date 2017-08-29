@@ -30,10 +30,10 @@
 </div>
 <div class="row">
 <div class="col-xs-6">
-<small>Showing {limit} from total {total} data</small>
+<small>Showing {display} from total {total} data</small>
 </div>
 <div class="col-xs-6">
-<nav aria-label="Page navigation">
+<!-- <nav aria-label="Page navigation">
 <ul class="pagination pull-right">
 <li class="disabled">
 <a href="#" aria-label="Previous">
@@ -51,9 +51,16 @@
 </a>
 </li>
 </ul>
+</nav> -->
+
+<nav aria-label="Page navigation">
+  <ul class="pagination pull-right">
+    <li each={pejing} class={status}><a href="#" class="goto_page" data-offset={offset}>{pNumber}</a></li>
+  </ul>
 </nav>
 
 </div>
+
 </div>
 
 <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
@@ -170,6 +177,8 @@ self.limit = limit;
 self.total = resultData.total;
 self.articles = dataGot;
 self.update();
+var totalDisplayed = $('td[title-idc]').length;
+self.display = totalDisplayed;
 // console.log(this.articles);
 
 //-------------------------------------------------------
@@ -243,6 +252,31 @@ $('#delete').modal('hide');
 }
 });
 });
+//paging-----------------
+function pagination(pageA){
+  var totalPage = Math.ceil(self.total/self.limit);
+  var nomer = [];
+  for(page=0;page<totalPage;page++){
+    var pNumber = page+1;
+    var os = limit*page;
+    if(pageA==os){
+    var  status='active';
+  }else{
+    var status = '';
+  }
+nomer.push({'pNumber' :pNumber,'offset' :os,'status' :status});
+  }
+  // console.log(totalDisplayed);
+  self.pejing=nomer;
+  self.update();
+}
+pagination(offset);
+//-------------------------------------
+$('.goto_page').click(function(e){
+  e.preventDefault();
+  var offset=$(this).data('offset');
+  runMe(2,offset)
+})
 //----------------------------------------------
 },//close success articles
 error : function(jqXHR, textStatus, errorThrown) {
